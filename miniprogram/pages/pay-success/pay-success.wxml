@@ -1,0 +1,103 @@
+<!--pages/pay-success/pay-success.wxml-->
+<view class="page" wx:if="{{!loading}}">
+
+  <!-- 顶部成功头 -->
+  <view class="success-header">
+    <view class="success-header-bg"></view>
+    <view class="success-circle">
+      <text class="success-icon">✓</text>
+    </view>
+    <view class="success-title">支付成功！</view>
+    <view class="success-sub">
+      <text wx:if="{{group}}">快邀请好友参团，成功后全额退款</text>
+      <text wx:else>订单已提交，等待发货</text>
+    </view>
+  </view>
+
+  <!-- 拼团进度卡片（有拼团时显示） -->
+  <view wx:if="{{group}}" class="invite-card card">
+    <view class="invite-card-title">拼团进行中</view>
+    <view class="invite-card-sub">还差 {{requiredCount - members.length}} 人成团</view>
+
+    <!-- 进度条 -->
+    <view class="progress-wrap">
+      <view class="progress-label">
+        <text>{{members.length}}/{{requiredCount}} 人已参团</text>
+        <text class="progress-pct">{{members.length >= requiredCount ? '100' : (members.length * 100 / requiredCount).toFixed(0)}}%</text>
+      </view>
+      <view class="progress-bar">
+        <view
+          class="progress-fill"
+          style="width: {{members.length >= requiredCount ? 100 : members.length * 100 / requiredCount}}%"
+        ></view>
+      </view>
+    </view>
+
+    <!-- 成员头像列 -->
+    <view class="member-row">
+      <view wx:for="{{members}}" wx:key="id" class="member-slot">
+        <view class="member-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-img"/>
+          <text wx:else class="avatar-emoji">{{item.nickname ? item.nickname[0] : '👤'}}</text>
+          <view class="member-check">✓</view>
+        </view>
+        <text class="m-label done">{{item.role === 'LEADER' ? '团长' : '团员'}}</text>
+      </view>
+      <!-- 空槽 -->
+      <view
+        wx:for="{{requiredCount - members.length}}" wx:key="index"
+        class="member-slot"
+      >
+        <view class="member-avatar empty">
+          <text>+</text>
+        </view>
+        <text class="m-label">等待中</text>
+      </view>
+    </view>
+
+    <!-- 倒计时 -->
+    <view class="timer-badge">
+      <text>⏱</text>
+      <text>剩余时间：{{countdown}}</text>
+    </view>
+
+    <!-- 分享按钮 -->
+    <button class="btn-share" open-type="share">
+      <text>📤</text>
+      <text>邀请好友参团</text>
+    </button>
+  </view>
+
+  <!-- 订单信息卡片 -->
+  <view class="order-info-card card">
+    <view class="info-card-title">订单信息</view>
+    <view class="info-row">
+      <text class="info-key">商品</text>
+      <text class="info-val">{{order.productName}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">实付金额</text>
+      <text class="info-val purple">¥{{order.amountText}}</text>
+    </view>
+    <view class="info-row" wx:if="{{group}}">
+      <text class="info-key">退款金额</text>
+      <text class="info-val green">成团后全额退款</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">订单号</text>
+      <text class="info-val hint">{{order.orderNo}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <view class="btn-mini outline" bindtap="toOrderList">查看订单</view>
+    <view class="btn-mini primary" bindtap="toHome">继续逛逛</view>
+  </view>
+
+</view>
+
+<!-- 加载中 -->
+<view class="loading-wrap" wx:elif="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

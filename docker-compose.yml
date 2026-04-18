@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: shop-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: shop_db
+      MYSQL_USER: shop_user
+      MYSQL_PASSWORD: shop123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./shop-backend/src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - shop_network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: shop-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - shop_network
+
+  # Spring Boot 后端（先启动 MySQL/Redis 后再启动）
+  app:
+    build:
+      context: ./shop-backend
+      dockerfile: Dockerfile
+    container_name: shop-app
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_PASSWORD: shop123456
+      REDIS_PASSWORD: ''
+      JWT_SECRET: shop_jwt_secret_change_this_in_production
+      WX_APP_ID: your_wx_appid
+      WX_APP_SECRET: your_wx_appsecret
+      WX_PAY_APP_ID: your_wx_pay_appid
+      WX_PAY_MCH_ID: your_mch_id
+      WX_PAY_SERIAL: your_serial
+      WX_PAY_API_V3_KEY: your_api_v3_key
+      WX_PAY_NOTIFY_URL: https://your-domain.com/api/pay/notify
+      WX_PAY_REFUND_NOTIFY_URL: https://your-domain.com/api/refund/notify
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/apiclient_key.pem:/app/config/apiclient_key.pem:ro
+    networks:
+      - shop_network
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:1.24-alpine
+    container_name: shop-nginx
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./shop-admin/dist:/usr/share/nginx/html/admin:ro
+    networks:
+      - shop_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  shop_network:
+    driver: bridge

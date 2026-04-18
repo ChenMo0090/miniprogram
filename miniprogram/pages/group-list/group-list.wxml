@@ -1,0 +1,125 @@
+<!--pages/group-list/group-list.wxml-->
+<view class="page">
+
+  <!-- 顶部 -->
+  <view class="home-top">
+    <view class="top-title">🫂 拼团中心</view>
+    <view class="top-sub">邀请好友一起拼，成功后全额退款</view>
+  </view>
+
+  <!-- 登录后：我的拼团 -->
+  <block wx:if="{{isLogin}}">
+    <!-- Tab -->
+    <view class="tab-bar">
+      <view
+        wx:for="{{tabs}}" wx:key="index"
+        class="tab-item {{activeTab === index ? 'active' : ''}}"
+        data-idx="{{index}}"
+        bindtap="onTabTap"
+      >{{item}}</view>
+    </view>
+
+    <!-- 列表 -->
+    <view class="group-list">
+      <view
+        wx:for="{{groups}}" wx:key="id"
+        class="group-card card"
+        data-id="{{item.id}}"
+        bindtap="toGroupDetail"
+      >
+        <!-- 头部 -->
+        <view class="group-card-header">
+          <text class="gc-name">{{item.productName}}</text>
+          <view class="gc-badge {{item.status === 1 ? '' : 'ended'}}">
+            {{item.statusText}}
+          </view>
+        </view>
+        <!-- 进度 -->
+        <view class="group-card-body">
+          <text class="gc-prog-label">参团进度：{{item.currentCount}}/{{item.requiredCount}} 人</text>
+          <view class="progress-bar">
+            <view
+              class="progress-fill"
+              style="width: {{item.currentCount >= item.requiredCount ? 100 : item.currentCount * 100 / item.requiredCount}}%"
+            ></view>
+          </view>
+          <!-- 成员头像 -->
+          <view class="avatars-row">
+            <view wx:for="{{item.members}}" wx:for-item="m" wx:key="id" class="g-avatar filled">
+              <image wx:if="{{m.avatar}}" src="{{m.avatar}}" mode="aspectFill" class="g-avatar-img"/>
+              <text wx:else>{{m.nickname ? m.nickname[0] : '👤'}}</text>
+            </view>
+            <view
+              wx:for="{{item.requiredCount - item.members.length}}" wx:key="index"
+              class="g-avatar empty"
+            ><text>+</text></view>
+          </view>
+          <view class="gc-timer" wx:if="{{item.status === 1 && item.countdown}}">
+            ⏱ 剩余 {{item.countdown}}
+          </view>
+          <view class="gc-price">拼团价 <text>¥{{item.groupPriceText}}</text></view>
+        </view>
+        <!-- 操作 -->
+        <view class="group-card-footer">
+          <view
+            wx:if="{{item.status === 1}}"
+            class="btn-sm primary"
+            catchtap="toGroupDetail"
+            data-id="{{item.id}}"
+          >邀请好友</view>
+          <view
+            wx:else
+            class="btn-sm disabled"
+          >{{item.statusText}}</view>
+        </view>
+      </view>
+
+      <!-- 加载/空 -->
+      <view class="load-more" wx:if="{{loading}}"><text>加载中...</text></view>
+      <view class="no-more" wx:elif="{{!hasMore && groups.length > 0}}"><text>— 没有更多 —</text></view>
+      <view class="empty-state" wx:if="{{!loading && groups.length === 0}}">
+        <text class="empty-icon">👥</text>
+        <text class="empty-text">还没有参与拼团</text>
+        <view class="btn-go-shop" bindtap="toShop">去逛逛</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 未登录：显示热门拼团 -->
+  <block wx:else>
+    <view class="section-header">
+      <view class="section-title"><view class="section-dot"></view><text>热门拼团</text></view>
+    </view>
+    <view class="group-list">
+      <view
+        wx:for="{{hotGroups}}" wx:key="id"
+        class="group-card card"
+        data-id="{{item.id}}"
+        bindtap="toGroupDetail"
+      >
+        <view class="group-card-header">
+          <text class="gc-name">{{item.productName}}</text>
+          <view class="gc-badge">进行中</view>
+        </view>
+        <view class="group-card-body">
+          <text class="gc-prog-label">{{item.currentCount}}/{{item.requiredCount}} 人已参团</text>
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.currentCount * 100 / item.requiredCount}}%"></view>
+          </view>
+          <view class="gc-timer">⏱ 剩余 {{item.countdown}}</view>
+          <view class="gc-price">拼团价 <text>¥{{item.groupPriceText}}</text></view>
+        </view>
+        <view class="group-card-footer">
+          <view class="btn-sm primary" catchtap="toGroupDetail" data-id="{{item.id}}">立即参团</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 登录引导 -->
+    <view class="login-tip card">
+      <text class="login-tip-text">登录后查看你的拼团记录</text>
+      <view class="btn-login" bindtap="toLogin">立即登录</view>
+    </view>
+  </block>
+
+</view>

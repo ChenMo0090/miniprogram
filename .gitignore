@@ -1,0 +1,51 @@
+# ===== Java / Maven =====
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ===== IDE =====
+.idea/
+*.iws
+*.iml
+*.ipr
+.eclipse/
+.project
+.classpath
+.settings/
+.vscode/
+
+# ===== Node / Vue / Vite =====
+node_modules/
+dist/
+.cache/
+.parcel-cache/
+*.local
+
+# ===== 上传文件目录 =====
+shop-backend/uploads/
+
+# ===== 日志 =====
+*.log
+logs/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 环境变量 =====
+.env
+.env.local
+.env.*.local
+
+# ===== 编译产物 =====
+*.map

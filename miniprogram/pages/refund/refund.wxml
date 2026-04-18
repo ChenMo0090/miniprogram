@@ -1,0 +1,119 @@
+<!--pages/refund/refund.wxml-->
+
+<!-- 模式一：退款申请成功（拼团成功后） -->
+<view class="page" wx:if="{{!loading && mode === 'result'}}">
+
+  <!-- 成功头 -->
+  <view class="refund-header">
+    <view class="refund-header-bg"></view>
+    <text class="trophy-icon">🏆</text>
+    <view class="refund-title">恭喜！拼团成功</view>
+    <view class="refund-sub">退款已申请，即将原路退回</view>
+  </view>
+
+  <!-- 退款金额卡片 -->
+  <view class="refund-amount-card card">
+    <view class="amount-area">
+      <view class="amount-label">退款金额</view>
+      <view class="amount-num">
+        <text class="amount-unit">¥</text>
+        <text class="amount-val">{{refund.amountText || order.amountText}}</text>
+      </view>
+    </view>
+    <view class="refund-details">
+      <view class="refund-row">
+        <text class="rk">退款原因</text>
+        <text class="rv">拼团成功全额退款</text>
+      </view>
+      <view class="refund-row">
+        <text class="rk">申请时间</text>
+        <text class="rv">{{refund.applyAt}}</text>
+      </view>
+      <view class="refund-row">
+        <text class="rk">预计到账</text>
+        <text class="rv green">1-3 个工作日</text>
+      </view>
+      <view class="refund-row">
+        <text class="rk">退款方式</text>
+        <text class="rv">原路返回（微信零钱/银行卡）</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 拼团成员证明 -->
+  <view class="proof-card card" wx:if="{{members.length > 0}}">
+    <view class="proof-title">参团成员（退款依据）</view>
+    <view class="proof-list">
+      <view wx:for="{{members}}" wx:key="id" class="proof-item">
+        <view class="proof-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="proof-img"/>
+          <text wx:else>{{item.nickname ? item.nickname[0] : '👤'}}</text>
+        </view>
+        <text class="proof-name">{{item.nickname || '匿名用户'}}</text>
+        <text class="proof-time">{{item.joinedAt}}</text>
+        <text class="proof-check">✓</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <button class="btn-success" bindtap="toOrders">查看订单</button>
+    <view class="refund-note">如有疑问，请联系客服</view>
+  </view>
+
+</view>
+
+<!-- 模式二：退款进度时间轴 -->
+<view class="page" wx:elif="{{!loading && mode === 'progress'}}">
+
+  <!-- 进度头 -->
+  <view class="progress-header">
+    <view class="nav-back-wrap" bindtap="onBack">
+      <text class="nav-back-text">‹</text>
+    </view>
+    <text class="p-icon">💰</text>
+    <view class="p-title">退款进度</view>
+    <view class="p-amount">¥{{refund.amountText}}</view>
+  </view>
+
+  <!-- 时间轴卡片 -->
+  <view class="timeline-card card">
+    <view class="timeline-title">处理进度</view>
+    <view class="timeline">
+      <view wx:for="{{timeline}}" wx:key="label" class="tl-item">
+        <view class="tl-dot {{item.state}}"></view>
+        <view class="tl-content">
+          <text class="tl-label {{item.state}}">{{item.label}}</text>
+          <text class="tl-desc">{{item.desc}}</text>
+          <text wx:if="{{item.time}}" class="tl-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退款信息 -->
+  <view class="info-card card">
+    <view class="info-row">
+      <text class="info-key">退款金额</text>
+      <text class="info-val purple">¥{{refund.amountText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">退款单号</text>
+      <text class="info-val hint">{{refund.refundNo}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">退款说明</text>
+      <text class="info-val">拼团成功全额退款</text>
+    </view>
+  </view>
+
+  <view class="bottom-actions">
+    <button class="btn-primary" bindtap="toHome">返回首页</button>
+  </view>
+
+</view>
+
+<view class="loading-wrap" wx:elif="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

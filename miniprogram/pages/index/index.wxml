@@ -1,0 +1,107 @@
+<!--pages/index/index.wxml-->
+<view class="page">
+
+  <!-- 顶部渐变区 -->
+  <view class="home-top">
+    <view class="top-row">
+      <text class="logo">🛒 拼团商城</text>
+      <view class="notice-badge">
+        <text>🔔</text>
+        <text>邀3人全额退款</text>
+      </view>
+    </view>
+    <!-- 搜索框 -->
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索商品..."
+        placeholder-style="color:#A9A9C4"
+        value="{{keyword}}"
+        confirm-type="search"
+        bindinput="onSearch"
+        bindconfirm="onSearch"
+      />
+      <text wx:if="{{keyword}}" class="search-clear" bindtap="onSearchClear">✕</text>
+    </view>
+  </view>
+
+  <!-- Banner -->
+  <swiper class="banner" indicator-dots circular autoplay interval="4000">
+    <swiper-item wx:for="{{bannerList}}" wx:key="index">
+      <view class="banner-inner" bindtap="toGroupList">
+        <view class="banner-content">
+          <view class="banner-title">{{item.title}}<text class="banner-em">全额退款</text></view>
+          <view class="banner-sub">{{item.sub}}</view>
+          <view class="banner-badge">{{item.badge}}</view>
+        </view>
+        <view class="banner-deco">🎁</view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 分类栏 -->
+  <view class="category-bar">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="cat-item {{activeCat === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onCatTap"
+    >
+      <view class="cat-icon">{{item.icon}}</view>
+      <text class="cat-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 商品区标题 -->
+  <view class="section-header">
+    <view class="section-title">
+      <view class="section-dot"></view>
+      <text>{{activeCat === 0 ? '全部商品' : categories[activeCat].name}}</text>
+    </view>
+    <text class="section-more">共{{products.length}}件</text>
+  </view>
+
+  <!-- 商品网格 -->
+  <view class="product-grid">
+    <view
+      wx:for="{{products}}"
+      wx:key="id"
+      class="product-card"
+      data-id="{{item.id}}"
+      bindtap="toProduct"
+    >
+      <view class="product-img img-bg{{index % 4 + 1}}">
+        <image wx:if="{{item.coverImg}}" src="{{item.coverImg}}" mode="aspectFill" class="img-real"/>
+        <text wx:else class="img-emoji">{{item.emoji || '🛍️'}}</text>
+        <view wx:if="{{item.groupPrice}}" class="activity-badge">拼团</view>
+      </view>
+      <view class="product-info">
+        <view class="product-name">{{item.name}}</view>
+        <view class="price-row">
+          <text class="price"><text class="price-unit">¥</text>{{item.priceText}}</text>
+          <text wx:if="{{item.groupPrice}}" class="original-price">¥{{item.origText}}</text>
+        </view>
+        <view class="sales-count">已售{{item.sales || 0}}件</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{loading}}">
+    <view class="loading-dots">
+      <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+    </view>
+  </view>
+  <view class="no-more" wx:elif="{{!hasMore && products.length > 0}}">
+    <text>— 没有更多了 —</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && products.length === 0}}">
+    <text class="empty-icon">🛒</text>
+    <text class="empty-text">暂无商品</text>
+  </view>
+
+</view>

@@ -1,0 +1,54 @@
+<!--pages/login/login.wxml-->
+<view class="page">
+
+  <!-- 背景装饰 -->
+  <view class="bg-deco"></view>
+  <view class="bg-circle1"></view>
+  <view class="bg-circle2"></view>
+
+  <!-- 品牌logo区 -->
+  <view class="brand-area">
+    <view class="brand-icon">🛒</view>
+    <view class="brand-name">拼团商城</view>
+    <view class="brand-slogan">邀3人拼团 · 成功全额退款</view>
+  </view>
+
+  <!-- 特性说明 -->
+  <view class="features">
+    <view class="feature-item">
+      <view class="feature-icon">🎁</view>
+      <view class="feature-text">
+        <view class="ft-title">拼团优惠价</view>
+        <view class="ft-sub">享受超低折扣</view>
+      </view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-icon">👥</view>
+      <view class="feature-text">
+        <view class="ft-title">邀3人成团</view>
+        <view class="ft-sub">分享给好友</view>
+      </view>
+    </view>
+    <view class="feature-item">
+      <view class="feature-icon">💰</view>
+      <view class="feature-text">
+        <view class="ft-title">全额退款</view>
+        <view class="ft-sub">一分不少返回</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录按钮 -->
+  <view class="login-area">
+    <button
+      class="btn-wx-login {{loading ? 'loading' : ''}}"
+      bindtap="onWxLogin"
+      disabled="{{loading}}"
+    >
+      <text wx:if="{{!loading}}">微信一键登录</text>
+      <text wx:else>登录中...</text>
+    </button>
+    <view class="privacy-note">登录即同意《用户协议》和《隐私政策》</view>
+  </view>
+
+</view>

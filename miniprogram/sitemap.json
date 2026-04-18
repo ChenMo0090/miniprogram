@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "rules": [
+    { "action": "disallow", "page": "pages/index/index" },
+    { "action": "disallow", "page": "pages/product/product" },
+    { "action": "disallow", "page": "pages/group-detail/group-detail" }
+  ]
+}

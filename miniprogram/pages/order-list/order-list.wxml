@@ -1,0 +1,92 @@
+<!--pages/order-list/order-list.wxml-->
+<view class="page">
+
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <text class="nav-back" bindtap="onBack">‹</text>
+    <text class="nav-title">我的订单</text>
+    <view></view>
+  </view>
+
+  <!-- Tab栏 -->
+  <view class="tab-bar">
+    <view
+      wx:for="{{tabs}}" wx:key="index"
+      class="tab-item {{activeTab === index ? 'active' : ''}}"
+      data-idx="{{index}}"
+      bindtap="onTabTap"
+    >{{item}}</view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view scroll-y class="list-wrap" bindscrolltolower="onReachBottom">
+    <view wx:for="{{orders}}" wx:key="id" class="order-card card">
+      <!-- 头部 -->
+      <view class="order-card-header">
+        <text class="order-no">订单号: {{item.orderNo}}</text>
+        <view class="status-tag tag {{item.status === 6 ? 'tag-success' : item.status === 0 ? 'tag-warning' : 'tag-purple'}}">
+          {{item.statusText}}
+        </view>
+      </view>
+      <!-- 商品信息 -->
+      <view
+        class="order-product"
+        data-id="{{item.id}}"
+        data-groupid="{{item.groupId}}"
+        bindtap="toOrderDetail"
+      >
+        <view class="product-img-wrap img-bg1">
+          <image wx:if="{{item.productImage}}" src="{{item.productImage}}" mode="aspectFill" class="product-img"/>
+          <text wx:else class="product-emoji">🛍️</text>
+        </view>
+        <view class="product-info">
+          <text class="product-name">{{item.productName}}</text>
+          <text class="product-spec" wx:if="{{item.spec}}">规格: {{item.spec}}</text>
+          <view class="price-row">
+            <text class="price">¥{{item.amountText}}</text>
+            <text class="qty">x{{item.quantity}}</text>
+          </view>
+        </view>
+      </view>
+      <!-- 底部操作 -->
+      <view class="order-card-footer">
+        <text class="order-time">{{item.createdAtText}}</text>
+        <view class="footer-actions">
+          <view
+            wx:if="{{item.status === 0}}"
+            class="btn-action primary"
+            data-productid="{{item.productId}}"
+            bindtap="onPayTap"
+          >去付款</view>
+          <view
+            wx:elif="{{item.groupId && item.status === 1}}"
+            class="btn-action"
+            data-id="{{item.id}}"
+            data-groupid="{{item.groupId}}"
+            bindtap="toOrderDetail"
+          >邀请好友</view>
+          <view
+            wx:elif="{{item.status === 6}}"
+            class="btn-action green"
+            data-id="{{item.id}}"
+            data-groupid=""
+            bindtap="toOrderDetail"
+          >查看退款</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载/空状态 -->
+    <view class="load-more" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+    <view class="no-more" wx:elif="{{!hasMore && orders.length > 0}}">
+      <text>— 没有更多了 —</text>
+    </view>
+    <view class="empty-state" wx:if="{{!loading && orders.length === 0}}">
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">暂无订单</text>
+    </view>
+  </scroll-view>
+
+</view>
