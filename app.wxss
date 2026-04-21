@@ -1,0 +1,134 @@
+/* app.wxss — 全局样式变量与通用工具类 */
+page {
+  --primary: #6C3CE1;
+  --primary-dark: #4A1FA8;
+  --primary-light: #8B5CF6;
+  --gold: #F0B429;
+  --gold-light: #FDE68A;
+  --success: #10B981;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  --bg: #F4F2FB;
+  --card: #FFFFFF;
+  --text-main: #1A1033;
+  --text-sub: #6B6B8A;
+  --text-hint: #A9A9C4;
+  --border: #EBEBF5;
+  --radius: 14rpx;
+  --radius-sm: 8rpx;
+  --radius-lg: 22rpx;
+  --shadow-sm: 0 2rpx 12rpx rgba(108,60,225,0.10);
+  --shadow-md: 0 8rpx 32rpx rgba(108,60,225,0.16);
+  --shadow-lg: 0 20rpx 60rpx rgba(108,60,225,0.22);
+
+  background: var(--bg);
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--text-main);
+  font-size: 28rpx;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 渐变色 */
+.gradient-main { background: linear-gradient(135deg, #6C3CE1 0%, #9B5DE5 50%, #C77DFF 100%); }
+.gradient-gold  { background: linear-gradient(135deg, #F0B429 0%, #FDE68A 100%); }
+.gradient-success { background: linear-gradient(135deg, #10B981 0%, #34D399 100%); }
+
+/* 通用卡片 */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 通用按钮 */
+.btn-primary {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #6C3CE1 0%, #9B5DE5 100%);
+  color: #fff; font-size: 32rpx; font-weight: 800;
+  border-radius: 56rpx; padding: 24rpx 0;
+  box-shadow: 0 8rpx 32rpx rgba(108,60,225,0.40);
+  letter-spacing: 1rpx;
+  border: none;
+}
+.btn-success {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  color: #fff; font-size: 32rpx; font-weight: 800;
+  border-radius: 56rpx; padding: 24rpx 0;
+  box-shadow: 0 8rpx 32rpx rgba(16,185,129,0.38);
+  border: none;
+}
+.btn-outline {
+  display: flex; align-items: center; justify-content: center;
+  border: 2rpx solid rgba(108,60,225,0.3);
+  color: var(--primary); font-size: 28rpx; font-weight: 700;
+  border-radius: 56rpx; padding: 20rpx 0;
+  background: rgba(108,60,225,0.05);
+}
+
+/* 状态 tag */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 4rpx 14rpx; border-radius: 12rpx;
+  font-size: 20rpx; font-weight: 700;
+}
+.tag-success  { background: rgba(16,185,129,0.1); color: var(--success); }
+.tag-warning  { background: rgba(245,158,11,0.1);  color: var(--warning); }
+.tag-danger   { background: rgba(239,68,68,0.1);   color: var(--danger); }
+.tag-info     { background: rgba(59,130,246,0.1);  color: var(--info); }
+.tag-purple   { background: rgba(108,60,225,0.1);  color: var(--primary); }
+
+/* 通用标题行 */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28rpx 28rpx 16rpx;
+}
+.section-title {
+  display: flex; align-items: center; gap: 12rpx;
+  font-size: 30rpx; font-weight: 800; color: var(--text-main);
+}
+.section-dot {
+  width: 8rpx; height: 32rpx;
+  background: linear-gradient(135deg, #6C3CE1, #C77DFF);
+  border-radius: 4rpx;
+}
+.section-more { font-size: 24rpx; color: var(--primary); font-weight: 600; }
+
+/* 通用导航栏（自定义页） */
+.nav-bar {
+  background: #fff;
+  padding: 0 28rpx; height: 90rpx;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1rpx solid var(--border);
+}
+.nav-back  { color: var(--primary); font-size: 44rpx; }
+.nav-title { flex: 1; text-align: center; font-size: 34rpx; font-weight: 800; color: var(--text-main); }
+.nav-action { color: var(--primary); font-size: 26rpx; font-weight: 600; }
+
+/* 渐变导航栏 */
+.nav-bar-gradient {
+  background: linear-gradient(135deg, #6C3CE1 0%, #9B5DE5 100%);
+  padding: 0 28rpx; height: 90rpx;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-bar-gradient .nav-back  { color: rgba(255,255,255,0.9); }
+.nav-bar-gradient .nav-title { color: #fff; }
+.nav-bar-gradient .nav-action { color: rgba(255,255,255,0.85); }
+
+/* 分割线 */
+.divider { height: 16rpx; background: var(--bg); }
+
+/* 空状态 */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 120rpx 60rpx; gap: 24rpx;
+}
+.empty-icon { font-size: 120rpx; opacity: 0.3; }
+.empty-text { font-size: 28rpx; color: var(--text-hint); font-weight: 500; }
+
+/* 加载中 */
+.loading-wrap {
+  display: flex; justify-content: center; padding: 60rpx 0;
+}
+.loading-text { font-size: 26rpx; color: var(--text-hint); }
