@@ -48,6 +48,15 @@
       <text wx:if="{{!loading}}">微信一键登录</text>
       <text wx:else>登录中...</text>
     </button>
+
+    <!-- Mock 模式：快速体验按钮 -->
+    <button
+      class="btn-mock-login"
+      bindtap="onMockLogin"
+    >
+      <text>🔧 Mock 模式（免登录体验）</text>
+    </button>
+
     <view class="privacy-note">登录即同意《用户协议》和《隐私政策》</view>
   </view>
 

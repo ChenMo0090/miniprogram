@@ -29,11 +29,11 @@
     <!-- 进度条 -->
     <view class="progress-wrap">
       <view class="progress-label">
-        <text>{{members.length}}/{{group.requiredCount}} 人</text>
-        <text class="pct">{{(members.length * 100 / group.requiredCount).toFixed(0)}}%</text>
+        <text>{{memberCount}}/{{requiredCount}} 人</text>
+        <text class="pct">{{progressPercent}}%</text>
       </view>
       <view class="progress-bar">
-        <view class="progress-fill" style="width: {{members.length >= group.requiredCount ? 100 : members.length * 100 / group.requiredCount}}%"></view>
+        <view class="progress-fill" style="width: {{progressWidth}}%"></view>
       </view>
     </view>
 

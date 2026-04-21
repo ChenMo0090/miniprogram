@@ -40,7 +40,7 @@
           <view class="progress-bar">
             <view
               class="progress-fill"
-              style="width: {{item.currentCount >= item.requiredCount ? 100 : item.currentCount * 100 / item.requiredCount}}%"
+              style="width: {{item.progressWidth}}%"
             ></view>
           </view>
           <!-- 成员头像 -->
@@ -104,7 +104,7 @@
         <view class="group-card-body">
           <text class="gc-prog-label">{{item.currentCount}}/{{item.requiredCount}} 人已参团</text>
           <view class="progress-bar">
-            <view class="progress-fill" style="width: {{item.currentCount * 100 / item.requiredCount}}%"></view>
+            <view class="progress-fill" style="width: {{item.progressWidth}}%"></view>
           </view>
           <view class="gc-timer">⏱ 剩余 {{item.countdown}}</view>
           <view class="gc-price">拼团价 <text>¥{{item.groupPriceText}}</text></view>

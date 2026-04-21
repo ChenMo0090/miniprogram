@@ -33,6 +33,8 @@ Page({
       const members = group ? (group.members || []) : []
       const requiredCount = group ? group.requiredCount : 3
       const countdownSec = group ? secondsUntil(group.expireAt) : 0
+      // 进度条计算（WXML 不支持复杂表达式）
+      const rawPct = members.length * 100 / (requiredCount || 1)
       this.setData({
         order: { ...order, amountText: formatPrice(order.totalAmount) },
         group,
@@ -40,6 +42,8 @@ Page({
         requiredCount,
         countdownSec,
         countdown: formatCountdown(countdownSec),
+        progressPercent: Math.round(rawPct),
+        progressWidth: Math.min(100, rawPct).toFixed(1),
         loading: false
       })
       if (group && countdownSec > 0) this.startTimer()

@@ -68,4 +68,15 @@
 }
 .btn-wx-login::after { border: none; }
 .btn-wx-login.loading { opacity: 0.7; }
+
+/* Mock 登录按钮 */
+.btn-mock-login {
+  width: 100%; padding: 24rpx 0;
+  background: rgba(255,255,255,0.15); color: #fff;
+  border: 1rpx solid rgba(255,255,255,0.3);
+  border-radius: 50rpx; font-size: 26rpx; text-align: center;
+  backdrop-filter: blur(8rpx); letter-spacing: 1rpx;
+}
+.btn-mock-login::after { border: none; }
+
 .privacy-note { font-size: 22rpx; color: rgba(255,255,255,0.6); text-align: center; }

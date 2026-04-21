@@ -23,13 +23,17 @@ Page({
 
   loadHotGroups() {
     request('/group/hot', 'GET', { pageSize: 6 }).then(res => {
-      const list = (res.data || []).map(g => ({
-        ...g,
-        statusText: GROUP_STATUS_MAP[g.status],
-        groupPriceText: formatPrice(g.groupPrice),
-        countdownSec: secondsUntil(g.expireAt),
-        countdown: formatCountdown(secondsUntil(g.expireAt))
-      }))
+      const list = (res.data || []).map(g => {
+        const rawPct = (g.currentCount || 0) * 100 / (g.requiredCount || 1)
+        return {
+          ...g,
+          statusText: GROUP_STATUS_MAP[g.status],
+          groupPriceText: formatPrice(g.groupPrice),
+          countdownSec: secondsUntil(g.expireAt),
+          countdown: formatCountdown(secondsUntil(g.expireAt)),
+          progressWidth: Math.min(100, rawPct).toFixed(1)
+        }
+      })
       this.setData({ hotGroups: list })
     }).catch(() => {})
   },
@@ -44,12 +48,16 @@ Page({
       page, pageSize: 10,
       status: status >= 0 ? status : undefined
     }).then(res => {
-      const list = (res.data.records || []).map(g => ({
-        ...g,
-        statusText: GROUP_STATUS_MAP[g.status],
-        groupPriceText: formatPrice(g.groupPrice),
-        countdown: g.status === 1 ? formatCountdown(secondsUntil(g.expireAt)) : ''
-      }))
+      const list = (res.data.records || []).map(g => {
+        const rawPct = (g.currentCount || 0) * 100 / (g.requiredCount || 1)
+        return {
+          ...g,
+          statusText: GROUP_STATUS_MAP[g.status],
+          groupPriceText: formatPrice(g.groupPrice),
+          countdown: g.status === 1 ? formatCountdown(secondsUntil(g.expireAt)) : '',
+          progressWidth: Math.min(100, rawPct).toFixed(1)
+        }
+      })
       this.setData({
         groups: reset ? list : [...this.data.groups, ...list],
         page: page + 1, hasMore: list.length >= 10, loading: false

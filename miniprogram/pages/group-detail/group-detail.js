@@ -31,6 +31,9 @@ Page({
       const userId = app.globalData.userInfo?.id
       const alreadyJoined = members.some(m => m.userId === userId)
       const countdownSec = g.status === 1 ? secondsUntil(g.expireAt) : 0
+      // 进度条计算（WXML 不支持复杂表达式，需在 JS 中算好）
+      const rawPct = members.length * 100 / (g.requiredCount || 1)
+      const progressWidth = Math.min(100, rawPct).toFixed(1)
       this.setData({
         group: {
           ...g,
@@ -42,7 +45,11 @@ Page({
         countdownSec,
         countdown: formatCountdown(countdownSec),
         alreadyJoined,
-        canJoin: g.status === 1 && !alreadyJoined && members.length < g.requiredCount
+        canJoin: g.status === 1 && !alreadyJoined && members.length < g.requiredCount,
+        memberCount: members.length,
+        requiredCount: g.requiredCount,
+        progressPercent: Math.round(rawPct),
+        progressWidth
       })
       if (g.status === 1 && countdownSec > 0) this.startTimer()
     }).catch(() => this.setData({ loading: false }))

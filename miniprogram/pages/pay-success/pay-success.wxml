@@ -23,12 +23,12 @@
     <view class="progress-wrap">
       <view class="progress-label">
         <text>{{members.length}}/{{requiredCount}} 人已参团</text>
-        <text class="progress-pct">{{members.length >= requiredCount ? '100' : (members.length * 100 / requiredCount).toFixed(0)}}%</text>
+        <text class="progress-pct">{{progressPercent}}%</text>
       </view>
       <view class="progress-bar">
         <view
           class="progress-fill"
-          style="width: {{members.length >= requiredCount ? 100 : members.length * 100 / requiredCount}}%"
+          style="width: {{progressWidth}}%"
         ></view>
       </view>
     </view>
