@@ -1,0 +1,119 @@
+<!--pages/product/product.wxml-->
+<view class="page" wx:if="{{!loading && product}}">
+
+  <!-- 渐变导航栏 -->
+  <view class="nav-bar-gradient">
+    <text class="nav-back" bindtap="onBack">‹</text>
+    <text class="nav-title">商品详情</text>
+    <button class="nav-action share-btn" open-type="share">分享</button>
+  </view>
+
+  <!-- 商品主图 -->
+  <view class="detail-img">
+    <image wx:if="{{product.coverImg}}" src="{{product.coverImg}}" mode="aspectFill" class="main-img"/>
+    <view wx:else class="img-placeholder">
+      <text class="img-emoji">🛍️</text>
+    </view>
+  </view>
+
+  <!-- 价格区 -->
+  <view class="price-area">
+    <view class="price-left">
+      <view class="main-price">
+        <text class="price-unit">¥</text>
+        <text class="price-num">{{product.groupPriceText || product.priceText}}</text>
+      </view>
+      <view class="orig-price" wx:if="{{product.groupPrice}}">原价 ¥{{product.origText}}</view>
+      <view class="rating-row">
+        <text>⭐⭐⭐⭐⭐</text>
+        <text class="rating-text">4.9 · 已售{{product.sales || 0}}件</text>
+      </view>
+    </view>
+    <view class="stock-info">库存 {{product.stock}} 件</view>
+  </view>
+
+  <!-- 商品名 -->
+  <view class="product-name-section">
+    <text class="product-title">{{product.name}}</text>
+    <text class="product-desc">{{product.description}}</text>
+  </view>
+
+  <!-- 拼团规则卡片 -->
+  <view class="group-rule-card" wx:if="{{product.groupPrice}}">
+    <view class="rule-title">
+      <text>👥</text>
+      <text>拼团规则 · 全额退款</text>
+    </view>
+    <view class="rule-step">
+      <view class="step-num">1</view>
+      <text class="step-text">以拼团价 ¥{{product.groupPriceText}} 购买商品</text>
+    </view>
+    <view class="rule-step">
+      <view class="step-num">2</view>
+      <text class="step-text">支付成功后，邀请好友参与拼团（需{{product.groupRequired || 3}}人）</text>
+    </view>
+    <view class="rule-step">
+      <view class="step-num">3</view>
+      <text class="step-text">{{product.groupExpireHours || 24}}小时内拼团成功，系统发起全额退款</text>
+    </view>
+    <view class="refund-highlight">
+      <text>🎉</text>
+      <text>成团后 ¥{{product.groupPriceText}} 全额退款到账</text>
+    </view>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="spec-section" wx:if="{{product.specs.length > 0}}">
+    <view class="spec-row">
+      <text class="spec-label">规格</text>
+      <view class="spec-tags">
+        <view
+          wx:for="{{product.specs}}" wx:key="index"
+          class="spec-tag {{selectedSpec === item ? 'active' : ''}}"
+          data-spec="{{item}}"
+          bindtap="onSpecTap"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="qty-row">
+      <text class="qty-label">数量</text>
+      <view class="qty-ctrl">
+        <view class="qty-btn minus" bindtap="onQtyMinus">−</view>
+        <text class="qty-num">{{quantity}}</text>
+        <view class="qty-btn plus" bindtap="onQtyPlus">+</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品描述 -->
+  <view class="desc-section">
+    <view class="desc-title">商品详情</view>
+    <view class="desc-content">
+      <text>{{product.detail || product.description || '暂无详情'}}</text>
+    </view>
+  </view>
+
+  <!-- 底部购买栏（留出安全区） -->
+  <view style="height: 160rpx;"></view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-wrap" wx:elif="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>
+
+<!-- 底部购买操作栏（fixed） -->
+<view class="buy-bar" wx:if="{{!loading && product}}">
+  <view class="btn-cart" bindtap="onBack">
+    <text>‹</text>
+  </view>
+  <view class="buy-btns">
+    <button class="btn-buy-normal" bindtap="onBuyNow">立即购买</button>
+    <button
+      wx:if="{{product.groupPrice}}"
+      class="btn-buy-group"
+      data-groupid=""
+      bindtap="onGroupBuy"
+    >¥{{product.groupPriceText}} 发起拼团</button>
+  </view>
+</view>

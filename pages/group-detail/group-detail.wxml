@@ -1,0 +1,126 @@
+<!--pages/group-detail/group-detail.wxml-->
+<view class="page" wx:if="{{!loading && group}}">
+
+  <!-- 状态栏（颜色随状态变化） -->
+  <view class="status-bar {{group.status === 2 ? 'success' : group.status === 3 ? 'failed' : ''}}">
+    <view class="nav-back-wrap" bindtap="onBack">
+      <text class="nav-back-text">‹</text>
+    </view>
+    <view class="status-main">{{group.statusText}}</view>
+    <view class="status-sub">
+      <text wx:if="{{group.status === 1}}">还差 {{group.requiredCount - members.length}} 人成团</text>
+      <text wx:elif="{{group.status === 2}}">🎉 拼团成功，退款处理中</text>
+      <text wx:else>团已解散</text>
+    </view>
+  </view>
+
+  <!-- 拼团进度卡片 -->
+  <view class="progress-card card">
+    <view class="progress-header-row">
+      <text class="progress-title">拼团进度</text>
+      <view wx:if="{{group.status === 1}}" class="countdown-badge">
+        <text>⏱</text>
+        <text>{{countdown}}</text>
+      </view>
+      <view wx:elif="{{group.status === 2}}" class="tag tag-success">已成团</view>
+      <view wx:else class="tag tag-danger">已结束</view>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-wrap">
+      <view class="progress-label">
+        <text>{{members.length}}/{{group.requiredCount}} 人</text>
+        <text class="pct">{{(members.length * 100 / group.requiredCount).toFixed(0)}}%</text>
+      </view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{members.length >= group.requiredCount ? 100 : members.length * 100 / group.requiredCount}}%"></view>
+      </view>
+    </view>
+
+    <!-- 成员列表 -->
+    <view class="member-list">
+      <view wx:for="{{members}}" wx:key="id" class="member-item">
+        <view class="m-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="m-avatar-img"/>
+          <text wx:else>{{item.nickname ? item.nickname[0] : '👤'}}</text>
+        </view>
+        <view class="m-info">
+          <text class="m-name">{{item.nickname || '匿名用户'}}</text>
+          <view wx:if="{{item.role === 'LEADER'}}" class="tag tag-purple">团长</view>
+        </view>
+        <text class="m-done">已付款 ✓</text>
+      </view>
+      <!-- 空槽 -->
+      <view
+        wx:for="{{group.requiredCount - members.length}}" wx:key="index"
+        class="member-item empty"
+      >
+        <view class="m-avatar empty"><text>+</text></view>
+        <text class="m-name empty">等待加入...</text>
+        <view class="m-wait">
+          <text>邀请</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品信息卡片 -->
+  <view class="product-info-card card">
+    <view class="info-card-title">商品信息</view>
+    <view class="info-row">
+      <text class="info-key">商品名称</text>
+      <text class="info-val">{{group.productName}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">拼团价格</text>
+      <text class="info-val purple">¥{{group.groupPriceText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">成团后退款</text>
+      <text class="info-val green">¥{{group.groupPriceText}} 全额退款</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">有效期</text>
+      <text class="info-val">{{group.expireAt}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作按钮 -->
+  <view class="bottom-bar">
+    <button
+      wx:if="{{group.status === 1 && canJoin}}"
+      class="btn-join"
+      bindtap="onJoinGroup"
+    >¥{{group.groupPriceText}} 参与拼团</button>
+
+    <button
+      wx:if="{{group.status === 1 && !alreadyJoined && canJoin}}"
+      class="btn-invite"
+      open-type="share"
+    >
+      <text>📤</text>
+      <text>邀请好友参团</text>
+    </button>
+
+    <button
+      wx:if="{{group.status === 1 && alreadyJoined}}"
+      class="btn-invite full"
+      open-type="share"
+    >
+      <text>📤</text>
+      <text>邀请好友参团（还差 {{group.requiredCount - members.length}} 人）</text>
+    </button>
+
+    <view wx:if="{{group.status === 2}}" class="success-tip">
+      <text>🎉 拼团成功！退款将在 1-3 个工作日内到账</text>
+    </view>
+    <view wx:if="{{group.status === 3}}" class="failed-tip">
+      <text>😔 拼团未达人数，已自动退款</text>
+    </view>
+  </view>
+
+</view>
+
+<view class="loading-wrap" wx:elif="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

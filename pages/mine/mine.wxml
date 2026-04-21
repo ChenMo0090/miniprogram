@@ -1,0 +1,74 @@
+<!--pages/mine/mine.wxml-->
+<view class="page">
+
+  <!-- 顶部用户信息 -->
+  <view class="profile-header">
+    <view class="profile-bg"></view>
+
+    <!-- 已登录 -->
+    <block wx:if="{{userInfo}}">
+      <view class="avatar-wrap">
+        <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-img"/>
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-emoji">👤</text>
+        </view>
+      </view>
+      <view class="profile-info">
+        <view class="profile-name">{{userInfo.nickname || '用户'}}</view>
+        <view class="profile-sub">UID: {{userInfo.id}}</view>
+      </view>
+      <view class="logout-btn" bindtap="onLogout">退出</view>
+    </block>
+
+    <!-- 未登录 -->
+    <block wx:else>
+      <view class="avatar-placeholder" bindtap="toLogin">
+        <text class="avatar-emoji">👤</text>
+      </view>
+      <view class="profile-info" bindtap="toLogin">
+        <view class="profile-name">点击登录</view>
+        <view class="profile-sub">登录后享受完整功能</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card card">
+    <view class="stat-item" bindtap="onMenuTap" data-path="/pages/order-list/order-list">
+      <view class="stat-num">{{stats.orders}}</view>
+      <view class="stat-label">订单</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="onMenuTap" data-path="/pages/group-list/group-list">
+      <view class="stat-num">{{stats.groups}}</view>
+      <view class="stat-label">参团</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <view class="stat-num green">{{stats.refunds}}</view>
+      <view class="stat-label">退款</view>
+    </view>
+  </view>
+
+  <!-- 菜单列表 -->
+  <view wx:for="{{menus}}" wx:key="section" class="menu-section">
+    <view class="menu-section-title">{{item.section}}</view>
+    <view class="menu-card card">
+      <view
+        wx:for="{{item.items}}" wx:for-item="menu" wx:key="name"
+        class="menu-item"
+        data-path="{{menu.path}}"
+        bindtap="onMenuTap"
+      >
+        <view class="menu-icon mi-{{menu.color}}">{{menu.icon}}</view>
+        <text class="menu-name">{{menu.name}}</text>
+        <view wx:if="{{menu.badge > 0}}" class="menu-badge">{{menu.badge}}</view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本号 -->
+  <view class="version-tip">拼团商城 v1.0.0</view>
+
+</view>
